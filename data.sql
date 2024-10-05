@@ -9,3 +9,11 @@ VALUES ("백설공주들", "종이책", 2, "사과..", "빨간 사과..", "김�
 
 INSERT INTO books (title, form, isbn, summary, detail, author, pages, contents, price, pub_date)
 VALUES ("흥부와 놀부들", "종이책", 3, "제비..", "까만 제비..", "김제비", 100, "목차입니다.", 20000, "2023-12-08");
+
+select * from books 
+LEFT JOIN category on books.category_id = category.id 
+where books.id = 1
+
+//신간조회
+SELECT * FROM books WHERE Pub_DATE BETWEEN DATA_SUB(NOW(),INTERVAL 1 MONTH) AND NOW();
+SELECT * FROM books WHERE Pub_DATE BETWEEN DATA_SUB('2023-12-21',INTERVAL 1 MONTH) AND NOW();
