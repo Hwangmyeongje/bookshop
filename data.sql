@@ -17,3 +17,28 @@ where books.id = 1
 //신간조회
 SELECT * FROM books WHERE Pub_DATE BETWEEN DATA_SUB(NOW(),INTERVAL 1 MONTH) AND NOW();
 SELECT * FROM books WHERE Pub_DATE BETWEEN DATA_SUB('2023-12-21',INTERVAL 1 MONTH) AND NOW();
+
+INSERT INTO likes (user_id,liked_book_id) VALUES(1,1);
+INSERT INTO likes (user_id,liked_book_id) VALUES(1,2);
+INSERT INTO likes (user_id,liked_book_id) VALUES(1,3);
+INSERT INTO likes (user_id,liked_book_id) VALUES(3,1);
+INSERT INTO likes (user_id,liked_book_id) VALUES(4,4);
+INSERT INTO likes (user_id,liked_book_id) VALUES(2,1);
+INSERT INTO likes (user_id,liked_book_id) VALUES(2,3);
+INSERT INTO likes (user_id,liked_book_id) VALUES(2,2);
+INSERT INTO likes (user_id,liked_book_id) VALUES(2,5);
+
+
+
+DELETE FROM likes WHERE user_id =1 AND liked_book_id =1;
+
+SELECT count(*) FROM likes WHERE liked_book_id=1;
+
+ELECT * ,
+(SELECT count(*) FROM likes WHERE books.id =liked_book_id ) AS likes
+FROM books
+
+ SELECT *,
+(SELECT count(*) FROM likes WHERE books.id =liked_book_id ) AS likes,
+(SELECT EXISTS (SELECT * FROM likes WHERE user_id =1 AND liked_book_id=1)) AS liked FROM books WHERE books.id=1;
+

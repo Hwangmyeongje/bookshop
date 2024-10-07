@@ -9,7 +9,8 @@ const allBooks = (req, res) => {
   //offset :                  ex) 0,3,6 = limit * (currentPage-1)
   let offset = limit * (currentPage - 1);
   let values = [];
-  let sql = "select * FROM books ";
+  let sql = `select *,(SELECT count(*) FROM likes WHERE books.id =liked_book_id ) AS likes
+ FROM books `;
   if (category_id && news) {
     sql +=
       " WHERE category_id=? AND pub_date BETWEEN DATE_SUB('2023-12-21',INTERVAL 1 MONTH) AND NOW()";
@@ -35,12 +36,17 @@ const allBooks = (req, res) => {
 };
 
 const bookDetail = (req, res) => {
-  let { id } = req.params;
-
-  let sql = `select * from books 
-LEFT JOIN category on books.category_id = category.id 
-where books.id = ?`;
-  conn.query(sql, id, (err, results) => {
+  let book_id = req.params.id;
+  let { user_id } = req.body;
+  let sql = `SELECT *,
+                (SELECT count(*) FROM likes WHERE books.id =liked_book_id ) AS likes,
+                (SELECT EXISTS (SELECT * FROM likes WHERE user_id =? AND liked_book_id=?)) AS liked 
+              FROM books 
+              LEFT JOIN category
+              ON books.category_id = category.category_id
+              WHERE books.id=?; `;
+  let values = [user_id, book_id, book_id];
+  conn.query(sql, values, (err, results) => {
     if (err) {
       console.log(err);
       return res.status(StatusCodes.BAD_REQUEST).end();
