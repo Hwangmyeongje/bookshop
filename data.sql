@@ -55,3 +55,21 @@ DELETE FROM cartItems WHERE id = ?;
 
 //장바구니에서 선택한 아이템 목록 조회
 SELECT * FROM Bookshop.cartItems WHERE user_id = 1 AND id IN(1,3);
+
+//주문하기
+INSERT INTO delivery (address, receiver,contact) VALUES ('서울시 중구', '황명제','010-1234-5678');
+
+//주문정보입력
+INSERT INTO orders (book_title,total_quantity,total_price,user_id,delivery_id) 
+VALUES ("어린왕자들",3,60000,1,(SELECT max(id) FROM delivery))
+
+//주문상세입력
+INSERT INTO orderedBook (order_id,book_id,quantity) VALUES(1,1,1);
+INSERT INTO orderedBook (order_id,book_id,quantity) VALUES(1,3,2);
+
+//결제된 도서 장바구니 삭제
+DELETE FROM cartItems WHERE id IN (1,2,3);
+
+SELECT orders.id,book_title,total_quantity,total_price,created_at,address,receiver,contact
+FROM orders LEFT JOIN delivery
+ON orders.delivery_id = delivery.id
