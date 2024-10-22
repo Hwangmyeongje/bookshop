@@ -1,8 +1,8 @@
+const ensureAuthorization = require("../auth");
 const jwt = require("jsonwebtoken");
 const conn = require("../mariadb"); //db모듈
 const { StatusCodes } = require("http-status-codes");
-const dotenv = require("dotenv");
-dotenv.config();
+
 //좋아요 추가
 const addLike = (req, res) => {
   const { id } = req.params;
@@ -56,21 +56,6 @@ const removeLike = (req, res) => {
     });
   }
 };
-
-function ensureAuthorization(req, res) {
-  try {
-    let receivedJwt = req.headers["authorization"];
-    console.log("received jswt: ", receivedJwt);
-
-    let decodedJwt = jwt.verify(receivedJwt, process.env.PRIVATE_KEY);
-    console.log(decodedJwt);
-    return decodedJwt;
-  } catch (err) {
-    console.log(err.name);
-    console.log(err.message);
-    return err;
-  }
-}
 
 module.exports = {
   addLike,
